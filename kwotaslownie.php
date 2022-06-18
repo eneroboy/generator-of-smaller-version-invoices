@@ -176,7 +176,7 @@ function slownie($int){
   $in = preg_replace('/[^-\d]+/','',$int);
   $out = '';
 
-  if ($in{0} == '-'){
+  if ($in[0] == '-'){
     $in = substr($in, 1);
     $out = $slowa[0].' ';
   }
