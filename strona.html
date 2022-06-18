@@ -1,0 +1,283 @@
+<html><head><meta charset="UTF-8">
+
+    
+
+    <style>
+        body {
+            font-family: Tahoma;
+            padding: 0;
+            background-color: wheat;
+        }
+
+        .nazwaSprzedawcy {
+            width: 180px;
+        }
+
+        #glowny {
+            margin-left: auto;
+            margin-right: auto;
+            width: 1554px;
+            background-color: white;
+        }
+
+        #naglowek{
+            height: 75px;
+            position: relative;
+            background-color: rgb(0, 114, 114);
+
+        }
+
+        #napisGora{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35px;
+            color: wheat;
+        }
+
+        #divFormularz{
+            padding: 20px;
+            width: 700px;
+            float: left;
+        }
+
+        #numerRachunku{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #numerRachunku > * {
+            display: inline;
+        }
+
+        #numerRachunku > input {
+            display: inline;
+            width: 100px;
+        }
+
+        #liczbaProdukt > *{
+            display: inline;
+        }
+
+        #liczbaProduktow{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #daneSprzedawcy{
+            border-left: 2px solid  rgb(0, 114, 114);
+            padding: 10px;
+        }
+
+        #przeslijFormularz {
+            background-color: rgb(0, 114, 114);
+            border: none;
+            color: wheat;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        
+        #obrazek{
+            float: left;
+            padding: 18px;
+            width: 773px;
+            height: 602px;
+            border-left: 3px solid rgb(0, 114, 114);
+            position: relative;
+            margin-top: 5px;
+        }
+
+        #przycisk{
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        #produkty{
+            font-size: 13px;
+        }
+
+        #stopka{
+            clear: both;
+            height: 75px;
+            position: relative;
+            background-color: rgb(0, 114, 114);
+        }
+
+        #obrazek > div {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35px;
+            color: rgb(0, 114, 114);
+        }
+
+    </style>
+
+    <script>
+        function wysylanie(){
+            var ajx = new XMLHttpRequest();
+            ajx.open("POST", "stworzobrazek.php", true);
+            ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            var nazwaSprzedawcy = document.getElementById("nazwaSprzedawcy").value;
+            var ulicaSprzedawcy = document.getElementById("ulicaSprzedawcy").value;
+            var miejscowoscSprzedawcy = document.getElementById("miejscowoscSprzedawcy").value;
+            var numerRachunku1 = document.getElementById("numerRachunku1").value;
+            var numerRachunku2 = document.getElementById("numerRachunku2").value;
+            var nazwaMiejscowosci = document.getElementById("nazwaMiejscowosci").value;
+            var dataWystawieniaRachunku = document.getElementById("dataWystawieniaRachunku").value;
+            var nazwaOdbiorcy = document.getElementById("nazwaOdbiorcy").value;
+            var liczbaProduktow = document.getElementById("liczbaProduktow").value;
+            var cena = new Array(liczbaProduktow);
+            var nazwa = new Array(liczbaProduktow);
+            var ilosc = new Array(liczbaProduktow);
+
+            for (i = 1; i <= liczbaProduktow; i++){
+                cena[i] = document.getElementById("cena"+i).value;
+                nazwa[i] = document.getElementById("nazwa"+i).value;
+                ilosc[i] = document.getElementById("ilosc"+i).value;
+            }
+
+            var dane = 
+                "nazwaSprzedawcy="+nazwaSprzedawcy+
+                "&ulicaSprzedawcy="+ulicaSprzedawcy+
+                "&miejscowoscSprzedawcy="+miejscowoscSprzedawcy+
+                "&numerRachunku1="+numerRachunku1+
+                "&numerRachunku2="+numerRachunku2+
+                "&nazwaMiejscowosci="+nazwaMiejscowosci+
+                "&dataWystawieniaRachunku="+dataWystawieniaRachunku+
+                "&nazwaOdbiorcy="+nazwaOdbiorcy+
+                "&liczbaProduktow="+liczbaProduktow;
+            
+                for (i = 1; i <= liczbaProduktow; i++){
+                    dane += '&cena'+i+"="+cena[i]+"&nazwa"+i+"="+nazwa[i]+"&ilosc"+i+"="+ilosc[i];
+                }
+
+            document.getElementById("obrazek").innerHTML = dane;
+            ajx.send(dane);
+            ajx.onreadystatechange = function () {
+                if (ajx.readyState == 4 && ajx.status == 200) {
+                    document.getElementById("obrazek").innerHTML = ajx.responseText;
+                }
+            };
+
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <div id="glowny">
+        <div id="naglowek"><div id="napisGora">Generator rachunku v2 (AJAX)</div></div>
+        <div id="divFormularz"><form>
+            <div>
+                <p>Dane sprzedawcy</p>
+                 <div id="daneSprzedawcy">
+                     <div>
+                        <p style="margin: 0px 0px 15px 0px;">Nazwa firmy:</p>
+                        <textarea id="nazwaSprzedawcy" rows="4" columns="6" maxlength="48" placeholder="Wpisz dane"></textarea>
+                    </div> 
+                    <div>
+                        <p>Ulica:</p>
+                        <input id="ulicaSprzedawcy" maxlength="24" placeholder="max. 24 znaki" >
+                    </div>
+                    <div>
+                        <p>Kod pocztowy i miejscowość:</p>
+                        <input id="miejscowoscSprzedawcy" maxlength="24" placeholder="max. 24 znaki" >
+                    </div>
+                </div>
+            </div>
+
+            
+            <div id="numerRachunku"> 
+                <p>Numer Rachunku:</p>             
+                <input id="numerRachunku1" maxlength="4" placeholder="max. 4 znaki" >
+                <p>/R/</p>
+                <input id="numerRachunku2" maxlength="2" placeholder="max. 2 znaki" >
+            </div>
+
+
+            <div>                      
+                <p>Miejscowość wystawienia:</p>    
+                <input id="nazwaMiejscowosci" maxlength="16" placeholder="max. 16 znaków" >
+            </div>  
+
+
+            <div>
+                <p>Data wystawienia:</p>           
+                <input type="date" id="dataWystawieniaRachunku" >
+            </div> 
+
+
+            <div>
+                <p>Nazwa i dane odbiorcy odbiorcy:</p>
+                <textarea id="nazwaOdbiorcy" rows="4" columns="6" maxlength="141" placeholder="Wpisz dane"></textarea>
+            </div>
+
+
+            <div id="liczbaProdukt">         
+                <p>Liczba produktów (od 1 do 6):</p> 
+                <input type="number" min="1" max="6" id="liczbaProduktow" >
+            </div>
+
+
+            <div id="produkty">
+                <div>
+                    Nazwa produktu 1: <input type="text" id="nazwa1" name="nazwa1" maxlength="31" >   
+                    Ilość produktu 1: <input type="number" id="ilosc1" name="ilosc1" min="1" max="9999" >   
+                    Cena produktu 1: <input type="number" id="cena1" name="cena1" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                <div>
+                    Nazwa produktu 2: <input type="text" id="nazwa2" name="nazwa2" maxlength="31" >   
+                    Ilość produktu 2: <input type="number" id="ilosc2" name="ilosc2" min="1" max="9999" >   
+                    Cena produktu 2: <input type="number" id="cena2" name="cena2" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                <div>
+                    Nazwa produktu 3: <input type="text" id="nazwa3" name="nazwa3" maxlength="31" >   
+                    Ilość produktu 3: <input type="number" id="ilosc3" name="ilosc3" min="1" max="9999" >   
+                    Cena produktu 3: <input type="number" id="cena3" name="cena3" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                <div>
+                    Nazwa produktu 4: <input type="text" id="nazwa4" name="nazwa4" maxlength="31" >   
+                    Ilość produktu 4: <input type="number" id="ilosc4" name="ilosc4" min="1" max="9999" >   
+                    Cena produktu 4: <input type="number" id="cena4" name="cena4" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                <div>
+                    Nazwa produktu 5: <input type="text" id="nazwa5" name="nazwa5" maxlength="31" >   
+                    Ilość produktu 5: <input type="number" id="ilosc5" name="ilosc5" min="1" max="9999" >   
+                    Cena produktu 5: <input type="number" id="cena5" name="cena5" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                <div>
+                    Nazwa produktu 6: <input type="text" id="nazwa6" name="nazwa6" maxlength="31" >   
+                    Ilość produktu 6: <input type="number" id="ilosc6" name="ilosc6" min="1" max="9999" >   
+                    Cena produktu 6: <input type="number" id="cena6" name="cena6" step="0.01" min="0.01" max="2000000" ><br>
+                </div>
+
+                </div>       
+            </form>
+            <div id="przycisk">
+                <button id="przeslijFormularz" onclick="wysylanie()">Stworz</button>
+            </div> 
+
+        </div>
+        <div id="obrazek">
+            <!--<img src="rachunek.jpg">-->
+            <div>Miejsce na rachunek</div>
+        </div>
+        <div id="stopka"><div id="napisGora" style="font-size:12px">Made by github.com/eneroboy</div></div>
+    </div>
+
+</body></html>
